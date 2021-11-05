@@ -1,5 +1,6 @@
 package com.myapi.diningreviewapi.contoller
 
+import com.myapi.diningreviewapi.model.DiningReview
 import com.myapi.diningreviewapi.model.Restaurant
 import com.myapi.diningreviewapi.service.DiningReviewRepository
 import com.myapi.diningreviewapi.service.RestaurantRepository
@@ -13,9 +14,9 @@ import java.util.*
 @RequestMapping("/api/v1")
 class DiningReviewController(restaurantRepository: RestaurantRepository, userRepository: UserRepository, diningReviewRepository: DiningReviewRepository) {
 
-    final val restaurantRepository: RestaurantRepository
-    final val userRepository: UserRepository
-    final val diningReviewRepository: DiningReviewRepository
+    private val restaurantRepository: RestaurantRepository
+    private val userRepository: UserRepository
+    private val diningReviewRepository: DiningReviewRepository
 
 
     init {
@@ -32,14 +33,36 @@ class DiningReviewController(restaurantRepository: RestaurantRepository, userRep
     @GetMapping("/{id}")
     fun getRestaurantsById(@PathVariable id: Int): Restaurant {
 
-        val restaurant: Optional<Restaurant> = this.restaurantRepository.findById(id.toLong())
-        if(restaurant.isEmpty) {
+        val restaurantOptional: Optional<Restaurant> = this.restaurantRepository.findById(id.toLong())
+        if(restaurantOptional.isEmpty) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find the restaurant requested!")
         }
-        return restaurant.get()
+
+        return restaurantOptional.get()
+
+
     }
 
-    @PostMapping("/addRestaurant")
+    @PostMapping("/")
     fun addRestaurants(@RequestBody restaurant: Restaurant): Restaurant = restaurantRepository.save(restaurant)
+
+    @GetMapping("/reviews/{restaurantId}")
+    fun getReviewsByRestaurant(@PathVariable restaurantId: Int): List<DiningReview> {
+
+        // check if restaurant exists:
+        val restaurantOptional: Optional<Restaurant> = this.restaurantRepository.findById(restaurantId.toLong())
+        if(restaurantOptional.isEmpty) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find the restaurant requested!")
+        }
+
+        // find reviews and return:
+        return this.diningReviewRepository.findDiningReviewByRestaurantAndHasApprovalIsTrue(restaurantId.toLong())
+    }
+
+    @PostMapping("/reviews/{restaurantId}")
+    fun addReview(@PathVariable restaurantId: Long, @RequestBody review: DiningReview): DiningReview{
+        review.restaurant = restaurantId
+        return this.diningReviewRepository.save(review)
+    }
 
 }

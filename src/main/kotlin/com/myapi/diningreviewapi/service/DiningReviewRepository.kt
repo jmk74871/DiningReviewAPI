@@ -7,4 +7,10 @@ import org.springframework.stereotype.Repository
 @Repository
 interface DiningReviewRepository : CrudRepository<DiningReview, Long> {
 
+
+    fun findByRestaurant(restaurant: Long): MutableIterator<DiningReview>
+
+
+    fun findDiningReviewByRestaurantAndHasApprovalIsTrue(restaurant: Long): List<DiningReview>
+
 }

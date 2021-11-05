@@ -2,7 +2,7 @@ package com.myapi.diningreviewapi.model
 
 import javax.persistence.*
 
-@Table(name = "DINING_REVIEWS")
+@Table(name = "DiningReviews")
 @Entity
 open class DiningReview {
     @Id
@@ -13,9 +13,8 @@ open class DiningReview {
     @Column(name = "SUBMITTING_USER", nullable = false)
     open var submittingUser: String? = null
 
-    @ManyToOne(cascade = [CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.DETACH], optional = false)
-    @JoinColumn(name = "RESTAURANT_ID", nullable = false)
-    open var restaurant: Restaurant? = null
+    @Column(name = "RESTAURANT_ID", nullable = false)
+    open var restaurant: Long? = null
 
     @Column(name = "FOOD_RATING", nullable = false)
     open var foodRating: Int? = 0
