@@ -1,0 +1,46 @@
+2021-11-05 17:06:11 database: wrong user or password; user: ""
+org.h2.message.DbException: Falscher Benutzer Name oder Passwort
+Wrong user name or password [28000-200]
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.message.DbException.get(DbException.java:170)
+	at org.h2.engine.Engine.openSession(Engine.java:131)
+	at org.h2.engine.Engine.openSession(Engine.java:192)
+	at org.h2.engine.Engine.createSessionAndValidate(Engine.java:171)
+	at org.h2.engine.Engine.createSession(Engine.java:166)
+	at org.h2.server.TcpServerThread.run(TcpServerThread.java:168)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: org.h2.jdbc.JdbcSQLInvalidAuthorizationSpecException: Falscher Benutzer Name oder Passwort
+Wrong user name or password [28000-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:461)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	... 9 more
+2021-11-05 17:06:11 database: wrong user or password; user: ""
+org.h2.message.DbException: Falscher Benutzer Name oder Passwort
+Wrong user name or password [28000-200]
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.message.DbException.get(DbException.java:170)
+	at org.h2.engine.Engine.openSession(Engine.java:131)
+	at org.h2.engine.Engine.openSession(Engine.java:192)
+	at org.h2.engine.Engine.createSessionAndValidate(Engine.java:171)
+	at org.h2.engine.Engine.createSession(Engine.java:166)
+	at org.h2.server.TcpServerThread.run(TcpServerThread.java:168)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: org.h2.jdbc.JdbcSQLInvalidAuthorizationSpecException: Falscher Benutzer Name oder Passwort
+Wrong user name or password [28000-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:461)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	... 9 more
+2021-11-05 17:16:23 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax Fehler in SQL Befehl "INSERT INTO DINING_REVIEWS (COMMENT, FOOD_RATING, SERVICE_RATING, SUBMITTING_USER, RESTAURANT_ID)[*]"; erwartet "DIRECT, SORTED, DEFAULT, VALUES, SET, (, WITH, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "INSERT INTO DINING_REVIEWS (COMMENT, FOOD_RATING, SERVICE_RATING, SUBMITTING_USER, RESTAURANT_ID)[*]"; expected "DIRECT, SORTED, DEFAULT, VALUES, SET, (, WITH, SELECT, TABLE, VALUES"; SQL statement:
+INSERT INTO DINING_REVIEWS (COMMENT, FOOD_RATING, SERVICE_RATING, SUBMITTING_USER, RESTAURANT_ID) [42001-200]
+2021-11-05 17:16:23 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax Fehler in SQL Befehl "INSERT INTO DINING_REVIEWS (COMMENT, FOOD_RATING, SERVICE_RATING, SUBMITTING_USER, RESTAURANT_ID)[*]"; erwartet "DIRECT, SORTED, DEFAULT, VALUES, SET, (, WITH, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "INSERT INTO DINING_REVIEWS (COMMENT, FOOD_RATING, SERVICE_RATING, SUBMITTING_USER, RESTAURANT_ID)[*]"; expected "DIRECT, SORTED, DEFAULT, VALUES, SET, (, WITH, SELECT, TABLE, VALUES"; SQL statement:
+INSERT INTO DINING_REVIEWS (COMMENT, FOOD_RATING, SERVICE_RATING, SUBMITTING_USER, RESTAURANT_ID) [42001-200]
+2021-11-05 17:16:23 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax Fehler in SQL Befehl "INSERT INTO DINING_REVIEWS (COMMENT, FOOD_RATING, SERVICE_RATING, SUBMITTING_USER, RESTAURANT_ID)[*]"; erwartet "DIRECT, SORTED, DEFAULT, VALUES, SET, (, WITH, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "INSERT INTO DINING_REVIEWS (COMMENT, FOOD_RATING, SERVICE_RATING, SUBMITTING_USER, RESTAURANT_ID)[*]"; expected "DIRECT, SORTED, DEFAULT, VALUES, SET, (, WITH, SELECT, TABLE, VALUES"; SQL statement:
+INSERT INTO DINING_REVIEWS (COMMENT, FOOD_RATING, SERVICE_RATING, SUBMITTING_USER, RESTAURANT_ID) [42001-200]
