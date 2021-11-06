@@ -18,7 +18,6 @@ class DiningReviewController(restaurantRepository: RestaurantRepository, userRep
     private val userRepository: UserRepository
     private val diningReviewRepository: DiningReviewRepository
 
-
     init {
         this.restaurantRepository = restaurantRepository
         this.userRepository = userRepository
@@ -64,5 +63,7 @@ class DiningReviewController(restaurantRepository: RestaurantRepository, userRep
         review.restaurant = restaurantId
         return this.diningReviewRepository.save(review)
     }
+
+
 
 }
