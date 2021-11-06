@@ -21,4 +21,7 @@ open class User {
 
     @Column(name = "IS_VEGETARIAN", nullable = false)
     open var isVegetarian: Boolean? = false
+
+    @Column(name = "PASSWORD", nullable = false)
+    open var password: String? = null
 }

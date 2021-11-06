@@ -8,4 +8,6 @@ import org.springframework.stereotype.Service
 @Repository
 interface UserRepository : CrudRepository<User, Long> {
 
+    fun existsByUserNameIs(userName: String): Boolean
+
 }

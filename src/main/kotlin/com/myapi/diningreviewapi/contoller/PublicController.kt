@@ -12,7 +12,7 @@ import java.util.*
 
 @RestController
 @RequestMapping("/api/v1")
-class DiningReviewController(restaurantRepository: RestaurantRepository, userRepository: UserRepository, diningReviewRepository: DiningReviewRepository) {
+class PublicController(restaurantRepository: RestaurantRepository, userRepository: UserRepository, diningReviewRepository: DiningReviewRepository) {
 
     private val restaurantRepository: RestaurantRepository
     private val userRepository: UserRepository
@@ -42,9 +42,6 @@ class DiningReviewController(restaurantRepository: RestaurantRepository, userRep
 
     }
 
-    @PostMapping("/")
-    fun addRestaurants(@RequestBody restaurant: Restaurant): Restaurant = restaurantRepository.save(restaurant)
-
     @GetMapping("/reviews/{restaurantId}")
     fun getReviewsByRestaurant(@PathVariable restaurantId: Int): List<DiningReview> {
 
@@ -58,12 +55,16 @@ class DiningReviewController(restaurantRepository: RestaurantRepository, userRep
         return this.diningReviewRepository.findDiningReviewByRestaurantAndHasApprovalIsTrue(restaurantId.toLong())
     }
 
+
+
+    // These Methods will be moved to the protected User Controller once created
     @PostMapping("/reviews/{restaurantId}")
     fun addReview(@PathVariable restaurantId: Long, @RequestBody review: DiningReview): DiningReview{
         review.restaurant = restaurantId
         return this.diningReviewRepository.save(review)
     }
 
-
+    @PostMapping("/")
+    fun addRestaurants(@RequestBody restaurant: Restaurant): Restaurant = restaurantRepository.save(restaurant)
 
 }

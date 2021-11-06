@@ -1,6 +1,6 @@
-INSERT INTO USERS (CITY, PLZ, USER_NAME, IS_VEGETARIAN) VALUES ( 'Reutlingen', '72762', 'jmk.dev', false );
-INSERT INTO USERS (CITY, PLZ, USER_NAME, IS_VEGETARIAN) VALUES ( 'Reutlingen', '72762', 'ysm.dev', false );
-INSERT INTO USERS (CITY, PLZ, USER_NAME, IS_VEGETARIAN) VALUES ( 'Reutlingen', '72762', 'nn.dev', false );
+INSERT INTO USERS (CITY, PLZ, USER_NAME, IS_VEGETARIAN, PASSWORD) VALUES ( 'Reutlingen', '72762', 'jmk.dev', false, 'initUser01' );
+INSERT INTO USERS (CITY, PLZ, USER_NAME, IS_VEGETARIAN, PASSWORD) VALUES ( 'Reutlingen', '72762', 'ysm.dev', false, 'initUser02' );
+INSERT INTO USERS (CITY, PLZ, USER_NAME, IS_VEGETARIAN, PASSWORD) VALUES ( 'Reutlingen', '72762', 'nn.dev', false, 'initUser03' );
 
 -- Seed Restaurant DB
 INSERT INTO RESTAURANTS (ADRESS, CITIY, NAME, PLZ) VALUES ( 'Hautstr. 3', 'Reutlingen',  'Lecker Pizza!', '72762');

@@ -18,25 +18,36 @@ project for anyone who's interested.</p>
 <h2> API Endpoints </h2>
 
 <p>This part will give a brief overview of the API endpoints implemented so far. By default the API will be available under Port 8080 on localhost. So the endpoint url gets added to http://localhost:8080</p>
+
 <br>
 <h3>Public Endpoints</h3>
 
 <p>These Endpoints are available to everyone without creating a user account and performing a login to perform GET requests. </p>
 
 <h4>GET `.../api/v1/` </h4>
-<p>Returns a list of json elements containing information on all the restaurants known to the API.</p>
+<p>Returns a list of json object containing information on all the restaurants known to the API.</p>
 
 <h4>GET `.../api/v1/{id}`</h4>
-<p>Returns a json element containing information on the restaurant with the given ID.</p>
+<p>Returns a json object containing information on the restaurant with the given ID.</p>
 
 <h4>GET `.../api/v1/reviews/{id}`</h4>
-<p>Returns a list of json elements containing information all the approved reviews regarding the restaurant with the given ID.</p>
+<p>Returns a list of json object containing information all the approved reviews regarding the restaurant with the given ID.</p>
+
+<h4>POST `.../api/v1/signup`</h4>
+<p>Expects a json object as request body representing a new user. Checks if the username is available, hashes the password and creates the user account.</p>
+
+<h4>POST `.../api/v1/login`</h4>
+<p></p>
+
+<br>
+<h3>Endpoints for registered users</h3>
+<p>These Endpoints are only available to users, that have a user account and can submit a valid token</p>
 
 
 <br><br>
 <h2> Login and Authentication </h2>
 
-<p>Under this section I will try to explain how the Authentication for Users and Admins is handled oce it is implemented.</p>
+<p>Under this section I will try to explain how the Authentication for Users and Admins is handled once it is implemented.</p>
 
 <br>
 <h3>Logging in and getting a token</h3>
