@@ -35,7 +35,11 @@ project for anyone who's interested.</p>
 <p>Expects a json object as request body representing a new user. Checks if the username is available, hashes the password and creates the user account.</p>
 
 <h4>POST `.../api/v1/login`</h4>
-<p></p>
+<p>This is the endpoint to login with an existing user account. Checks if there is an user with the given username, 
+compares the hashed passwords and sets a cookie with the token generated for the user an it's current session. 
+Tokens are valid for 20 Minutes if there is noc action performed in this timeframe they will expire. 
+
+If username or passwords are incorrect a Excetion will be thrown telling the user to check the credentials!</p>
 
 <br>
 <h3>Endpoints for registered users</h3>
