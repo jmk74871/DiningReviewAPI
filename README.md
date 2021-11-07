@@ -1,14 +1,12 @@
 <h1> Dining Review API </h1>
 
 <p>Dining Review API is a basic RestAPI roughly based on the requirements given in a Milestone project 
-in the Building 
-<a href="https://www.codecademy.com/learn/paths/create-rest-apis-with-spring-and-java">
-REST APIs with Java and Spring Course on CodeCademy</a>. 
-The overall goal is to practice my skills working with the Springframework, Kotlin and Gradle.</p>
+in the Building <a href="https://www.codecademy.com/learn/paths/create-rest-apis-with-spring-and-java">
+REST APIs with Java and Spring Course on CodeCademy</a>. The overall goal is to practice my skills working with the Springframework, Kotlin and Gradle.</p>
 
 <p>Although I finished the course using Java as the programming language and Maven as a build tool 
-I decided to build this project using Kotlin and since Gradle offers the possibility to write the 
-build file in Kotlin I went with Gradle instead of Maven for the build tool.</p>
+I decided to build this project using Kotlin and since Gradle allows settings to be written in Kotlin 
+I went with Gradle instead of Maven for the build tool.</p>
 
 <p>This documentation should therefore primarily be a reference for my self 
 - sometimes it is helpful to write stuff down - as well as a way to gain a quick overview of the 
