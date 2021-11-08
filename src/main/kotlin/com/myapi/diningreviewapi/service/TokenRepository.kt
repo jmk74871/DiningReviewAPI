@@ -8,4 +8,8 @@ interface TokenRepository : JpaRepository<Token, String> {
 
     fun findByUuidString(uuidString: String): Optional<Token>
 
+    fun findByTimeStampIsGreaterThan(timeStamp: Long): List<Token>
+
+
+
 }

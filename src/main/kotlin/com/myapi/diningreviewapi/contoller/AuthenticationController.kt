@@ -11,18 +11,19 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.math.BigInteger
 import java.security.MessageDigest
+import java.time.Instant
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
 
 
 @RestController
 @RequestMapping("/api/v1/auth")
-class AuthenticationController(restaurantRepository: RestaurantRepository, userRepository: UserRepository, diningReviewRepository: DiningReviewRepository, tokenRepository: TokenRepository) {
+open class AuthenticationController(restaurantRepository: RestaurantRepository, userRepository: UserRepository, diningReviewRepository: DiningReviewRepository, tokenRepository: TokenRepository) {
 
-    private val restaurantRepository: RestaurantRepository
-    private val userRepository: UserRepository
-    private val diningReviewRepository: DiningReviewRepository
-    private val tokenRepository: TokenRepository
+    protected val restaurantRepository: RestaurantRepository
+    protected val userRepository: UserRepository
+    protected val diningReviewRepository: DiningReviewRepository
+    protected val tokenRepository: TokenRepository
 
     init {
         this.restaurantRepository = restaurantRepository
@@ -101,13 +102,23 @@ class AuthenticationController(restaurantRepository: RestaurantRepository, userR
 
     }
 
-    fun validateToken(): Boolean{
-        // ToDo: add method to check if a token is still valid.
-        return false
+    fun validateToken(tokenUuidString: String): Boolean{
+        // check for empty inputString
+        if(tokenUuidString == "") return false
+
+        // remove timed out tokens
+        this.removeTimedOutTokens()
+
+        // check if the submitted tokenString belongs to a valid token
+        return this.tokenRepository.findByUuidString(tokenUuidString).isPresent
     }
 
     fun removeTimedOutTokens(){
-        // ToDo: add method to remove all outdated Tokens from DB.
+        val timedOutTokens = this.tokenRepository.findByTimeStampIsGreaterThan(Instant.now().epochSecond + 20 * 60)
+
+        for(token in timedOutTokens){
+            this.tokenRepository.delete(token)
+        }
     }
 
 }
