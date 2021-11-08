@@ -18,19 +18,12 @@ import javax.servlet.http.HttpServletResponse
 
 @RestController
 @RequestMapping("/api/v1/auth")
-open class AuthenticationController(restaurantRepository: RestaurantRepository, userRepository: UserRepository, diningReviewRepository: DiningReviewRepository, tokenRepository: TokenRepository) {
-
-    protected val restaurantRepository: RestaurantRepository
-    protected val userRepository: UserRepository
-    protected val diningReviewRepository: DiningReviewRepository
-    protected val tokenRepository: TokenRepository
-
-    init {
-        this.restaurantRepository = restaurantRepository
-        this.userRepository = userRepository
-        this.diningReviewRepository = diningReviewRepository
-        this.tokenRepository = tokenRepository
-    }
+open class AuthenticationController(
+    private val restaurantRepository: RestaurantRepository,
+    private val userRepository: UserRepository,
+    private val diningReviewRepository: DiningReviewRepository,
+    private val tokenRepository: TokenRepository
+)   {
 
     @PostMapping("/signup")
     fun createNewUserAccount(@RequestBody user: User): User {
@@ -80,13 +73,13 @@ open class AuthenticationController(restaurantRepository: RestaurantRepository, 
 
     @Throws(ResponseStatusException::class)
     @GetMapping("/logout")
-    fun logoutUser(@CookieValue(value = "token", defaultValue = "") token: String): HttpStatus {
+    fun logoutUser(@CookieValue(value = "token", defaultValue = "") tokenUuidString: String): HttpStatus {
         // checks for missing input
-        if(token == "") throw ResponseStatusException(HttpStatus.BAD_REQUEST, "no token found, logout not necessary")
+        if(tokenUuidString == "") throw ResponseStatusException(HttpStatus.BAD_REQUEST, "no token found, logout not necessary")
 
         // finds the token if existing and deletes it
-        if(this.tokenRepository.findByUuidString(token).isPresent) {
-            this.tokenRepository.delete(this.tokenRepository.findByUuidString(token).get())
+        if(this.tokenRepository.findByUuidString(tokenUuidString).isPresent) {
+            this.tokenRepository.delete(this.tokenRepository.findByUuidString(tokenUuidString).get())
         } else {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "no token found, logout not necessary")
         }

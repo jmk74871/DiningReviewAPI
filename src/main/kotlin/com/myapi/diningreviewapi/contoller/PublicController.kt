@@ -12,18 +12,11 @@ import java.util.*
 
 @RestController
 @RequestMapping("/api/v1")
-class PublicController(restaurantRepository: RestaurantRepository, userRepository: UserRepository, diningReviewRepository: DiningReviewRepository) {
-
-    private val restaurantRepository: RestaurantRepository
-    private val userRepository: UserRepository
+class PublicController(
+    private val restaurantRepository: RestaurantRepository,
+    private val userRepository: UserRepository,
     private val diningReviewRepository: DiningReviewRepository
-
-    init {
-        this.restaurantRepository = restaurantRepository
-        this.userRepository = userRepository
-        this.diningReviewRepository = diningReviewRepository
-    }
-
+)   {
     @GetMapping("/")
     fun getRestaurants(): MutableIterable<Restaurant> {
         return this.restaurantRepository.findAll()
@@ -38,8 +31,6 @@ class PublicController(restaurantRepository: RestaurantRepository, userRepositor
         }
 
         return restaurantOptional.get()
-
-
     }
 
     @GetMapping("/reviews/{restaurantId}")
@@ -54,17 +45,4 @@ class PublicController(restaurantRepository: RestaurantRepository, userRepositor
         // find reviews and return:
         return this.diningReviewRepository.findDiningReviewByRestaurantAndHasApprovalIsTrue(restaurantId.toLong())
     }
-
-
-
-    // These Methods will be moved to the protected User Controller once created
-    @PostMapping("/reviews/{restaurantId}")
-    fun addReview(@PathVariable restaurantId: Long, @RequestBody review: DiningReview): DiningReview{
-        review.restaurant = restaurantId
-        return this.diningReviewRepository.save(review)
-    }
-
-    @PostMapping("/")
-    fun addRestaurants(@RequestBody restaurant: Restaurant): Restaurant = restaurantRepository.save(restaurant)
-
 }
