@@ -1,16 +1,13 @@
 package com.myapi.diningreviewapi.contoller
 
 import com.myapi.diningreviewapi.model.Token
-import com.myapi.diningreviewapi.model.TokenRepository
+import com.myapi.diningreviewapi.service.TokenRepository
 import com.myapi.diningreviewapi.model.User
 import com.myapi.diningreviewapi.service.DiningReviewRepository
 import com.myapi.diningreviewapi.service.RestaurantRepository
 import com.myapi.diningreviewapi.service.UserRepository
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.math.BigInteger
 import java.security.MessageDigest
@@ -73,11 +70,27 @@ class AuthenticationController(restaurantRepository: RestaurantRepository, userR
 
             val cookie = Cookie("token", token.uuidString)
             cookie.maxAge = 20 * 60 // 20 Minutes
-            cookie.path = "/api/v1/reg/user/"
+            cookie.path = "/api/v1/"
             response.addCookie(cookie)
 
             return HttpStatus.OK
         }
+    }
+
+    @Throws(ResponseStatusException::class)
+    @GetMapping("/logout")
+    fun logoutUser(@CookieValue(value = "token", defaultValue = "") token: String): HttpStatus {
+        // checks for missing input
+        if(token == "") throw ResponseStatusException(HttpStatus.BAD_REQUEST, "no token found, logout not necessary")
+
+        // finds the token if existing and deletes it
+        if(this.tokenRepository.findByUuidString(token).isPresent) {
+            this.tokenRepository.delete(this.tokenRepository.findByUuidString(token).get())
+        } else {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "no token found, logout not necessary")
+        }
+        return HttpStatus.OK
+
     }
 
     fun toHashString(inputString: String): String {

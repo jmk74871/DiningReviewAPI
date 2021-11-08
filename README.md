@@ -31,6 +31,10 @@ project for anyone who's interested.</p>
 <h4>GET `.../api/v1/reviews/{id}`</h4>
 <p>Returns a list of json object containing information all the approved reviews regarding the restaurant with the given ID.</p>
 
+
+<br>
+<h3>Authentication Endpoints</h3>
+
 <h4>POST `.../api/v1/signup`</h4>
 <p>Expects a json object as request body representing a new user. Checks if the username is available, hashes the password and creates the user account.</p>
 
@@ -38,8 +42,11 @@ project for anyone who's interested.</p>
 <p>This is the endpoint to login with an existing user account. Checks if there is an user with the given username, 
 compares the hashed passwords and sets a cookie with the token generated for the user an it's current session. 
 Tokens are valid for 20 Minutes if there is noc action performed in this timeframe they will expire. 
-
 If username or passwords are incorrect a Excetion will be thrown telling the user to check the credentials!</p>
+
+<h4>GET `.../api/v1/logout`</h4>
+<p>By calling this Endpoint with an active cookie containing a token the token gets deleted on serverside and is therefore no longer valid.</p>
+
 
 <br>
 <h3>Endpoints for registered users</h3>
