@@ -13,4 +13,7 @@ interface DiningReviewRepository : CrudRepository<DiningReview, Long> {
 
     fun findDiningReviewByRestaurantAndHasApprovalIsTrue(restaurant: Long): List<DiningReview>
 
+
+    fun findByHasApprovalIsFalse(): List<DiningReview>
+
 }
