@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse
 
 @RestController
 @RequestMapping("/api/v1/auth")
-open class AuthenticationController(
+class AuthenticationController(
     private val restaurantRepository: RestaurantRepository,
     private val userRepository: UserRepository,
     private val diningReviewRepository: DiningReviewRepository,
@@ -51,17 +51,13 @@ open class AuthenticationController(
             // throw exception if passwords don't match
             throw loginFailed
         } else {
-            // ToDo: how to handle multiple logins while valid token still exists?
-
             // create token and store it
             val token = Token()
             token.userID = userFromDB.id
             this.tokenRepository.save(token)
 
             // create a cookie and return it.
-
             // ToDo: If ever used live the cookie might need to have cookie.secure & cookie.httpOnly set to
-
             val cookie = Cookie("token", token.uuidString)
             cookie.maxAge = 20 * 60 // 20 Minutes
             cookie.path = "/api/v1/"
