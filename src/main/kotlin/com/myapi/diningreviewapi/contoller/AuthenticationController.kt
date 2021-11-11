@@ -80,7 +80,6 @@ class AuthenticationController(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "no token found, logout not necessary")
         }
         return HttpStatus.OK
-
     }
 
     fun toHashString(inputString: String): String {
