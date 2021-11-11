@@ -5,7 +5,6 @@ import com.myapi.diningreviewapi.model.Restaurant
 import com.myapi.diningreviewapi.service.DiningReviewRepository
 import com.myapi.diningreviewapi.service.RestaurantRepository
 import com.myapi.diningreviewapi.service.TokenRepository
-import com.myapi.diningreviewapi.service.UserRepository
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
@@ -21,15 +20,17 @@ class AuthenticatedUserController(
     // ToDo: build methods to submit, edit and delete reviews. Maybe some additional views?
 
     @PostMapping("/reviews/{restaurantId}")
-    fun addReview(@PathVariable restaurantId: Long, @RequestBody review: DiningReview, @CookieValue("token", defaultValue="") tokenUuidString: String): DiningReview {
+    fun addReview(
+        @PathVariable restaurantId: Long,
+        @RequestBody review: DiningReview,
+        @CookieValue("token", defaultValue = "") tokenUuidString: String
+    ): DiningReview {
 
         // validate token
-        if(!this.validateToken(tokenUuidString)) throw ResponseStatusException(HttpStatus.FORBIDDEN)
+        if (!this.validateToken(tokenUuidString)) throw ResponseStatusException(HttpStatus.FORBIDDEN)
 
         review.restaurant = restaurantId
-        val savedReview = this.diningReviewRepository.save(review)
-        this.updateTotalRatings(restaurantId)  /* ToDo: move to admin area so update runs after approval */
-        return savedReview
+        return diningReviewRepository.save(review)
     }
 
     @PostMapping("/")
@@ -70,32 +71,6 @@ class AuthenticatedUserController(
         }
     }
 
-    fun updateTotalRatings(restaurantId: Long){
-        // get the restaurant
-        val restaurantOptional = this.restaurantRepository.findById(restaurantId)
-        if(restaurantOptional.isEmpty) return
-        val restaurant: Restaurant = restaurantOptional.get()
-
-        // find all associated reviews
-        val reviews = this.diningReviewRepository.findDiningReviewByRestaurantAndHasApprovalIsTrue(restaurantId)
-        if(reviews.isEmpty()) return
-
-        // sum up the ratings
-        val sumFoodRatings = reviews.mapNotNull(DiningReview::foodRating)
-        val sumServiceRatings = reviews.mapNotNull(DiningReview::serviceRating)
-
-        // calculate the Scores and update object accordingly
-        if(sumFoodRatings.isNotEmpty()){
-            restaurant.foodScore = sumFoodRatings.sum().toDouble() / sumFoodRatings.size.toDouble()
-        }
-        if(sumServiceRatings.isNotEmpty()){
-            restaurant.serviceScore = sumServiceRatings.sum().toDouble() / sumServiceRatings.size.toDouble()
-        }
-        restaurant.serviceScore?.let { serviceScore -> restaurant.foodScore?.let { foodScore -> restaurant.overallScore = (foodScore + serviceScore) / 2 } }
-
-        // save to db
-        this.restaurantRepository.save(restaurant)
-    }
 
 }
 

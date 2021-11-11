@@ -2,6 +2,7 @@ package com.myapi.diningreviewapi.contoller
 
 import com.myapi.diningreviewapi.model.DiningReview
 import com.myapi.diningreviewapi.model.Restaurant
+import com.myapi.diningreviewapi.model.StatusEnum
 import com.myapi.diningreviewapi.service.DiningReviewRepository
 import com.myapi.diningreviewapi.service.RestaurantRepository
 import com.myapi.diningreviewapi.service.UserRepository
@@ -38,11 +39,9 @@ class PublicController(
 
         // check if restaurant exists:
         val restaurantOptional: Optional<Restaurant> = this.restaurantRepository.findById(restaurantId.toLong())
-        if(restaurantOptional.isEmpty) {
-            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find the restaurant requested!")
-        }
+        if(restaurantOptional.isEmpty) throw ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find the restaurant requested!")
 
         // find reviews and return:
-        return this.diningReviewRepository.findDiningReviewByRestaurantAndHasApprovalIsTrue(restaurantId.toLong())
+        return this.diningReviewRepository.findDiningReviewByRestaurantAndStatusIs(restaurantId.toLong(), StatusEnum.approved)
     }
 }

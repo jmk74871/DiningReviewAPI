@@ -2,6 +2,7 @@ package com.myapi.diningreviewapi.contoller
 
 import com.myapi.diningreviewapi.model.DiningReview
 import com.myapi.diningreviewapi.model.Restaurant
+import com.myapi.diningreviewapi.model.StatusEnum
 import com.myapi.diningreviewapi.service.*
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -24,21 +25,33 @@ class AdminController (
             if (!this.validateToken(tokenUuidString)) throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing Admin rights or not logged in.")
 
             // get reviews waiting for approval
-            return this.diningReviewRepository.findByHasApprovalIsFalse()
+            return this.diningReviewRepository.findDiningReviewByStatusIs(StatusEnum.pending)
         }
 
-        @PostMapping("/{reviewID}")
+        @PostMapping("/app/{reviewID}")
         fun approveReview(@PathVariable reviewID: Long, @CookieValue("token", defaultValue="") tokenUuidString: String): DiningReview {
             //check admin rights
             if (!this.validateToken(tokenUuidString)) throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing Admin rights or not logged in.")
 
             // get review from db
-            val reviewOptional: Optional<DiningReview> = this.diningReviewRepository.findById(reviewID)
-            if(reviewOptional.isEmpty) throw ResponseStatusException(HttpStatus.BAD_REQUEST, "selected review not found")
-            val review = reviewOptional.get()
+            val review = this.getReviewFromDB(reviewID)
 
             //set approval to true and save
-            review.hasApproval = true
+            review.status = StatusEnum.approved
+            this.diningReviewRepository.save(review)
+            review.restaurant?.let { this.updateTotalRatings(it) }
+            return review
+        }
+
+        @PostMapping("/dis/{reviewID}")
+        fun dismissReview(@PathVariable reviewID: Long, @CookieValue("token", defaultValue="") tokenUuidString: String): DiningReview {
+            //check admin rights
+            if (!this.validateToken(tokenUuidString)) throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing Admin rights or not logged in.")
+
+            val review = this.getReviewFromDB(reviewID)
+
+            //set approval to true and save
+            review.status = StatusEnum.dismissed
             return this.diningReviewRepository.save(review)
         }
 
@@ -87,7 +100,7 @@ class AdminController (
         val restaurant: Restaurant = restaurantOptional.get()
 
         // find all associated reviews
-        val reviews = this.diningReviewRepository.findDiningReviewByRestaurantAndHasApprovalIsTrue(restaurantId)
+        val reviews = this.diningReviewRepository.findDiningReviewByRestaurantAndStatusIs(restaurantId, StatusEnum.approved)
         if(reviews.isEmpty()) return
 
         // sum up the ratings
@@ -106,4 +119,10 @@ class AdminController (
         // save to db
         this.restaurantRepository.save(restaurant)
     }
+
+        fun getReviewFromDB(reviewID: Long): DiningReview{
+            val reviewOptional: Optional<DiningReview> = this.diningReviewRepository.findById(reviewID)
+            if(reviewOptional.isEmpty) throw ResponseStatusException(HttpStatus.BAD_REQUEST, "selected review not found")
+            return reviewOptional.get()
+        }
 } // End of class

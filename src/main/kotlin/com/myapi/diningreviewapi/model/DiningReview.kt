@@ -2,7 +2,7 @@ package com.myapi.diningreviewapi.model
 
 import javax.persistence.*
 
-@Table(name = "DiningReviews")
+@Table(name = "DINING_REVIEWS")
 @Entity
 open class DiningReview {
     @Id
@@ -25,6 +25,7 @@ open class DiningReview {
     @Column(name = "COMMENT")
     open var comment: String? = null
 
-    @Column(name = "HAS_APPROVAL")
-    open var hasApproval: Boolean = false
+    @Enumerated
+    @Column(name = "STATUS", nullable = false)
+    open var status: StatusEnum = StatusEnum.pending
 }
