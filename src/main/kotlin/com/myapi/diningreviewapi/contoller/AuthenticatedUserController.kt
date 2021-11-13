@@ -17,7 +17,7 @@ class AuthenticatedUserController(
     private val diningReviewRepository: DiningReviewRepository,
     private val tokenRepository: TokenRepository
 )   {
-    // ToDo: build methods to submit, edit and delete reviews. Maybe some additional views?
+    // ToDo: build methods to submit, edit and delete reviews. Maybe some additional GetRequests?
 
     @PostMapping("/reviews/{restaurantId}")
     fun addReview(
@@ -34,11 +34,11 @@ class AuthenticatedUserController(
     }
 
     @PostMapping("/")
-    fun addRestaurants(@RequestBody restaurant: Restaurant, @CookieValue("token", defaultValue="") tokenUuidString: String) {
+    fun addRestaurants(@RequestBody restaurant: Restaurant, @CookieValue("token", defaultValue="") tokenUuidString: String): Restaurant {
         // validate token
         if(!this.validateToken(tokenUuidString)) throw ResponseStatusException(HttpStatus.FORBIDDEN)
 
-        restaurantRepository.save(restaurant)
+        return restaurantRepository.save(restaurant)
     }
 
 
