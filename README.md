@@ -53,6 +53,7 @@ If username or passwords are incorrect a Excetion will be thrown telling the use
 <p>These Endpoints are only available to users, that have a user account and can submit a valid token</p>
 
 
+
 <br><br>
 <h2> Login and Authentication </h2>
 

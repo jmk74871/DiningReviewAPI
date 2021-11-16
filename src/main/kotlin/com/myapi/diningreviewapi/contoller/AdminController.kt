@@ -57,6 +57,10 @@ class AdminController (
 
         /*
         ToDo: add Endpoints to add and approve new admins. Same system as with reviews. Only init superadmin shall add and approve all by himself.
+
+        ToDO: update readme
+
+        ToDo: Think about building an additional controller to give restaurant owners the possibility to vew data about their restaurant.
          */
 
 

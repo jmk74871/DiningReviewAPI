@@ -20,8 +20,6 @@ class AuthenticatedUserController(
     private val tokenRepository: TokenRepository,
     private val userRepository: UserRepository
 )   {
-    // ToDo: build methods to submit, edit and delete reviews. Maybe some additional GetRequests?
-
     // Endpoints regarding reviews
     @PostMapping("/reviews/{restaurantId}")
     fun addReview(
