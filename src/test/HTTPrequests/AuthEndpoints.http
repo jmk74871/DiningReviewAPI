@@ -7,7 +7,7 @@ Content-Type: application/json
   "userName": "Jonas",
   "city": "Reutlingen",
   "plz": "72762",
-  "password": "pass234"
+  "password": "Pass234"
 }
 
 ### Login as Users
@@ -17,7 +17,7 @@ Content-Type: application/json
 
 {
   "userName": "Jonas",
-  "password": "pass234"
+  "password": "Pass234"
 }
 
 ### logout
@@ -26,8 +26,5 @@ Host: localhost:8080
 Content-Type: application/json
 
 {
-  "userName": "Jonas",
-  "city": "Reutlingen",
-  "plz": "72762",
-  "password": "pass234"
+  "userName": "Jonas"
 }

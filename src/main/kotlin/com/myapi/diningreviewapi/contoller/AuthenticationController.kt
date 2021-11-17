@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.math.BigInteger
 import java.security.MessageDigest
-import java.time.Instant
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
 
@@ -30,8 +29,17 @@ class AuthenticationController(
         if(user.userName?.let {this.userRepository.existsByUserNameIs(it)} == true){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Username is missing or already in use but must me unique. Please pick an other username.")
         }
-        // toDo: add a check for password complexity and length?
-        user.password = user.password?.let { toHashString(it) } ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is missing.")
+        // check input
+        if(user.userName == null || user.userName == "" || user.city == null || user.city == "" || user.plz == null || user.plz == "") {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "required input missing or empty")
+        }
+
+        // check for password complexity and length - needs at least 6 characters including one uppercase, one lowercase and one numeric
+        user.password?.let { pw -> if(pw.length < 6 || pw.none { char -> char in '0'..'9' } || pw.none {char -> char.isLowerCase()} || pw.none {char -> char.isUpperCase()}) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Password complexity requirements not met. Needs at least 6 characters including one uppercase, one lowercase and one numeric")
+        } } ?:  throw ResponseStatusException(HttpStatus.BAD_REQUEST, "required input missing or empty")
+
+        user.password = user.password?.let { toHashString(it) } ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "required input missing or empty")
         return this.userRepository.save(user)
     }
 
@@ -89,24 +97,4 @@ class AuthenticationController(
         return BigInteger(1, hashBytes).toString(16)
 
     }
-
-    fun validateToken(tokenUuidString: String): Boolean{
-        // check for empty inputString
-        if(tokenUuidString == "") return false
-
-        // remove timed out tokens
-        this.removeTimedOutTokens()
-
-        // check if the submitted tokenString belongs to a valid token
-        return this.tokenRepository.findByUuidString(tokenUuidString).isPresent
-    }
-
-    fun removeTimedOutTokens(){
-        val timedOutTokens = this.tokenRepository.findByTimeStampIsGreaterThan(Instant.now().epochSecond + 20 * 60)
-
-        for(token in timedOutTokens){
-            this.tokenRepository.delete(token)
-        }
-    }
-
 }

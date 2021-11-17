@@ -103,10 +103,6 @@ class AuthenticatedUserController(
 
     }
 
-    /*
-    ToDo: Who may update restaurant entries or delete them?
-     */
-
 
     // Helper methods
     fun validateToken(tokenUuidString: String): User {
