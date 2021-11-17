@@ -49,7 +49,7 @@ class AuthenticatedUserController(
         val reviewOriginal = reviewOptional.get()
 
         // check if updating user is same as submitting user
-        if (review.submittingUser != user.userName) throw ResponseStatusException(HttpStatus.FORBIDDEN)
+        if (reviewOriginal.submittingUser != user.userName) throw ResponseStatusException(HttpStatus.FORBIDDEN)
 
         // update the original review object
         reviewOriginal.foodRating = reviewUpdate.foodRating
@@ -71,7 +71,7 @@ class AuthenticatedUserController(
         val reviewOriginal = reviewOptional.get()
 
         // check if updating user is same as submitting user
-        if (review.submittingUser != user.userName) throw ResponseStatusException(HttpStatus.FORBIDDEN)
+        if (reviewOriginal.submittingUser != user.userName) throw ResponseStatusException(HttpStatus.FORBIDDEN)
 
         // delete review
         return this.diningReviewRepository.delete(reviewOriginal)
@@ -81,13 +81,26 @@ class AuthenticatedUserController(
     @PostMapping("/")
     fun addRestaurants(@RequestBody restaurant: Restaurant,
                        @CookieValue("token", defaultValue="") tokenUuidString: String): Restaurant {
-        // validate token
-        validateToken(tokenUuidString)
-        /*
-        ToDO: check for duplicate submissions?
-         */
+        // validate input
+        if(restaurant.adress == null || (restaurant.citiy == null) || (restaurant.plz == null) || (restaurant.name == null) ||
+            restaurant.adress == "" || (restaurant.citiy == "") || (restaurant.plz == "") || (restaurant.name == "")){
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST)
+        }else{
+            // validate token
+            validateToken(tokenUuidString)
 
-        return restaurantRepository.save(restaurant)
+            // check for duplicate submissions
+            val optionalDuplucate = this.restaurantRepository.findByAdressAndCitiyAndPlzAndNameIsLikeAllIgnoreCase(
+                restaurant.adress!!,
+                restaurant.citiy!!,
+                restaurant.plz!!,
+                restaurant.name!!)
+            if(optionalDuplucate.isPresent) throw ResponseStatusException(HttpStatus.CONFLICT, "Entry that looks like a duplicate detected.")
+
+            return restaurantRepository.save(restaurant)
+        }
+
+
     }
 
     /*
@@ -96,8 +109,6 @@ class AuthenticatedUserController(
 
 
     // Helper methods
-    // fun validateUserIsOriginalCreator
-
     fun validateToken(tokenUuidString: String): User {
         // check for empty inputString
         if(tokenUuidString == "") throw ResponseStatusException(HttpStatus.FORBIDDEN)
