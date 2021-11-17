@@ -49,10 +49,7 @@ class AuthenticatedUserController(
         val reviewOriginal = reviewOptional.get()
 
         // check if updating user is same as submitting user
-        val tokenOptional = this.tokenRepository.findByUuidString(tokenUuidString)
-        if(tokenOptional.isEmpty) throw ResponseStatusException(HttpStatus.FORBIDDEN)
-        val token = tokenOptional.get()
-        if (token.userID != user.id) throw ResponseStatusException(HttpStatus.FORBIDDEN)
+        if (review.submittingUser != user.userName) throw ResponseStatusException(HttpStatus.FORBIDDEN)
 
         // update the original review object
         reviewOriginal.foodRating = reviewUpdate.foodRating
@@ -74,10 +71,7 @@ class AuthenticatedUserController(
         val reviewOriginal = reviewOptional.get()
 
         // check if updating user is same as submitting user
-        val tokenOptional = this.tokenRepository.findByUuidString(tokenUuidString)
-        if(tokenOptional.isEmpty) throw ResponseStatusException(HttpStatus.FORBIDDEN)
-        val token = tokenOptional.get()
-        if (token.userID != user.id) throw ResponseStatusException(HttpStatus.FORBIDDEN)
+        if (review.submittingUser != user.userName) throw ResponseStatusException(HttpStatus.FORBIDDEN)
 
         // delete review
         return this.diningReviewRepository.delete(reviewOriginal)
