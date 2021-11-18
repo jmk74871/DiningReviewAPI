@@ -79,7 +79,7 @@ class AuthenticatedUserController(
         return this.diningReviewRepository.delete(reviewOriginal)
     }
 
-
+    // endpoints regarding restaurant entries
     @PostMapping("/")
     fun addRestaurants(@RequestBody restaurant: Restaurant,
                        @CookieValue("token", defaultValue="") tokenUuidString: String): Restaurant {
@@ -105,7 +105,8 @@ class AuthenticatedUserController(
 
     }
 
-    @GetMapping
+    // endpoints regarding user data
+    @GetMapping("/user/data")
     fun getUserData(@CookieValue("token", defaultValue = "") tokenUuidString: String): User {
         return this.validateToken(tokenUuidString)
     }
