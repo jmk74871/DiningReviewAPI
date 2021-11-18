@@ -5,7 +5,7 @@ Content-Type: application/json
 
 {
   "userName": "Jonas",
-  "password": "pass234"
+  "password": "Pass234"
 }
 
 ### add new restaurant
@@ -35,4 +35,14 @@ Content-Length: 172
   "hasApproval": true
 }
 
-###
+### update user data
+PUT /api/v1/user/data HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "userName": "JonasK",
+  "city": "Reutlingen-Ringelbach",
+  "plz": "72762",
+  "password": "Pass978"
+}

@@ -10,6 +10,8 @@ import com.myapi.diningreviewapi.service.UserRepository
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
+import java.math.BigInteger
+import java.security.MessageDigest
 import java.time.Instant
 
 @RestController
@@ -77,7 +79,7 @@ class AuthenticatedUserController(
         return this.diningReviewRepository.delete(reviewOriginal)
     }
 
-    // Endpoints regarding restaurants
+
     @PostMapping("/")
     fun addRestaurants(@RequestBody restaurant: Restaurant,
                        @CookieValue("token", defaultValue="") tokenUuidString: String): Restaurant {
@@ -90,17 +92,50 @@ class AuthenticatedUserController(
             validateToken(tokenUuidString)
 
             // check for duplicate submissions
-            val optionalDuplucate = this.restaurantRepository.findByAdressAndCitiyAndPlzAndNameIsLikeAllIgnoreCase(
+            val optionalDuplicate = this.restaurantRepository.findByAdressAndCitiyAndPlzAndNameIsLikeAllIgnoreCase(
                 restaurant.adress!!,
                 restaurant.citiy!!,
                 restaurant.plz!!,
                 restaurant.name!!)
-            if(optionalDuplucate.isPresent) throw ResponseStatusException(HttpStatus.CONFLICT, "Entry that looks like a duplicate detected.")
+            if(optionalDuplicate.isPresent) throw ResponseStatusException(HttpStatus.CONFLICT, "Entry that looks like a duplicate detected.")
 
             return restaurantRepository.save(restaurant)
         }
 
 
+    }
+
+    @GetMapping
+    fun getUserData(@CookieValue("token", defaultValue = "") tokenUuidString: String): User {
+        return this.validateToken(tokenUuidString)
+    }
+
+    @PutMapping("/user/data")
+    fun updateUserData(
+        @RequestBody userUpdate: User,
+        @CookieValue("token", defaultValue = "") tokenUuidString: String,
+    ): User {
+        // validate token
+        val userOriginal = validateToken(tokenUuidString)
+
+        // update simple fields
+        userUpdate.city?.let { userOriginal.city = it}
+        userUpdate.plz?.let { userOriginal.plz = it }
+        userUpdate.isVegetarian?.let { userOriginal.isVegetarian = it }
+
+        // update userName
+        userUpdate.userName?.let { if(this.userRepository.findByUserName(it).isPresent){
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already in use. Pick an other one.")
+        }else{
+            userOriginal.userName = it
+        }}
+
+        // update password
+        userUpdate.password?.let { pw -> if(!(pw.length < 6 || pw.none { char -> char in '0'..'9' } || pw.none {char -> char.isLowerCase()} || pw.none {char -> char.isUpperCase()})) {
+            userOriginal.password = this.toHashString(pw)
+        } }
+
+        return this.userRepository.save(userOriginal)
     }
 
 
@@ -133,6 +168,14 @@ class AuthenticatedUserController(
         for(token in timedOutTokens){
             this.tokenRepository.delete(token)
         }
+    }
+
+    fun toHashString(inputString: String): String {
+        // turn String into ByteArray and compute the hashes
+        val hashBytes: ByteArray? = MessageDigest.getInstance("SHA-384").digest(inputString.toByteArray())
+        // turn hashed Bytes bak into a String
+        return BigInteger(1, hashBytes).toString(16)
+
     }
 }
 
